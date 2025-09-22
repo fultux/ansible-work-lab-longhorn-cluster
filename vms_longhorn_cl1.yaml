@@ -14,8 +14,8 @@
     vms_gateway: 10.20.0.1
     vms_nameservers: 10.0.10.253
 
-    controlplane_template_name: template-sle-micro
-    controlplane_template_id: 110
+    controlplane_template_name: leap-template-longhorn
+    controlplane_template_id: 114
     controlplane_vm_name:
       - longhorn-cl1-ctrl1
     controlplane_vm_ids:
@@ -27,8 +27,8 @@
     controlplane_vms_password: rancher
     controlplane_vm_ips: [10.20.0.21]
 
-    worker_template_name: template-sle-micro
-    worker_template_id: 110
+    worker_template_name: leap-template-longhorn
+    worker_template_id: 114
     worker_vm_name:
       - longhorn-cl1-wrk1
       - longhorn-cl1-wrk2
