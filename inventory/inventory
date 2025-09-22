@@ -15,4 +15,4 @@ longhorn-cl1-wrk2 ansible_user=rancher ansible_python_interpreter=/usr/bin/pytho
 longhorn-cl1-wrk3 ansible_user=rancher ansible_python_interpreter=/usr/bin/python3 ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
 
 [longhorn-cl1-controlplanes]
-longhorn-cl1-ctrl1 ansible_user=rancher ansible_python_interpreter=/usr/bin/python3 ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
+longhorn-cl1-ctrl1 ansible_user=rancher ansible_python_interpreter=/usr/bin/python3.12 ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
