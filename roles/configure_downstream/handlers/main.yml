@@ -3,4 +3,4 @@
     post_reboot_delay: 30
   when: installed is changed
   become: true
-  become_method: enable
+  become_method: sudo

@@ -5,4 +5,4 @@
     state: present
   notify: Reboot iscsi installed
   become: true
-  become_method: enable
+  become_method: sudo
