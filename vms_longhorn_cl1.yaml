@@ -25,6 +25,7 @@
     controlplane_vm_memory: 4096
     controlplane_vms_username: rancher
     controlplane_vms_password: rancher
+    controlplane_vm_ips: [10.20.0.21]
 
     worker_template_name: template-sle-micro
     worker_template_id: 110
@@ -36,6 +37,10 @@
       - 116
       - 117
       - 118
+    worker_vm_ips:
+      - 10.20.0.22
+      - 10.20.0.23
+      - 10.20.0.24
     worker_vm_cores: 4
     worker_vm_sockets: 2
     worker_vm_memory: 8192

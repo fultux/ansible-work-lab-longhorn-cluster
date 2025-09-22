@@ -1,4 +1,4 @@
-name: Destroy downstream 1
+name: Destroy vms downstream
 on: workflow_dispatch
 jobs:
   lint:
@@ -9,3 +9,4 @@ jobs:
         run: |
           source ~/ansible/ansible-11/bin/activate
           ansible-lint
+          ansible-playbook delete_vms_downstream.yaml

@@ -35,13 +35,13 @@
     cipassword: "{{ controlplane_vms_password }}"
     sshkeys: "{{ ssh_key }}"
     nameservers: "{{ vms_nameservers }}"
-    # ipconfig:
-    #   ipconfig0: 'ip={{ item.2 }}/{{ vms_subnet }},gw={{ vms_gateway }}'
+    ipconfig:
+      ipconfig0: "ip={{ item.2 }}/{{ vms_subnet }},gw={{ vms_gateway }}"
     update: true
   with_together:
     - "{{ controlplane_vm_name }}"
     - "{{ controlplane_vm_ids }}"
-    # - "{{ controlplane_vm_ips  }}"
+    - "{{ controlplane_vm_ips  }}"
 
 - name: Start Rancher vms
   community.general.proxmox_kvm:

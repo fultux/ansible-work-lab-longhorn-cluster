@@ -35,13 +35,13 @@
     cipassword: "{{ worker_vms_password }}"
     sshkeys: "{{ ssh_key }}"
     nameservers: "{{ vms_nameservers }}"
-    # ipconfig:
-    #   ipconfig0: 'ip={{ item.2 }}/{{ vms_subnet }},gw={{ vms_gateway }}'
+    ipconfig:
+      ipconfig0: "ip={{ item.2 }}/{{ vms_subnet }},gw={{ vms_gateway }}"
     update: true
   with_together:
     - "{{ worker_vm_name }}"
     - "{{ worker_vm_ids }}"
-    # - "{{ worker_vm_ips }}"
+    - "{{ worker_vm_ips }}"
 
 - name: Start worker vms
   community.general.proxmox_kvm:
