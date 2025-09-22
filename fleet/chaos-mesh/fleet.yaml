@@ -1,0 +1,13 @@
+defaultNamespace: chaos-mesh
+
+labels:
+  app: chaos-mesh
+
+helm:
+  repo: https://charts.chaos-mesh.org
+  # Using a pre-release (!!! DO NOT DO THIS IN PRODUCTION !!!)
+  version: "2.7.0"
+  chart: chaos-mesh
+  releaseName: chaos-mesh
+  valuesFiles:
+    - "values.yaml"

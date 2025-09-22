@@ -1,0 +1,44 @@
+- name: "Authenticate"
+  ansible.builtin.uri:
+    url: "https://{{ rancher_hostname }}/v3-public/localProviders/local?action=login"
+    method: POST
+    body_format: json
+    body:
+      username: "{{ rancher_username }}"
+      password: "{{ rancher_password }}"
+    validate_certs: false
+    status_code: 201
+    return_content: true
+  ignore_errors: true
+  register: login_response
+
+- name: "Get Cluster"
+  ansible.builtin.uri:
+    url: "https://{{ rancher_hostname }}/v3/clusters?name={{ cluster_name }}"
+    headers:
+      Authorization: Bearer {{ login_response.json.token }}
+    method: GET
+    validate_certs: false
+    status_code: 200
+  register: cluster_response
+  when: login_response is succeeded
+
+- name: "Get Node Command"
+  ansible.builtin.uri:
+    url: "https://{{ rancher_hostname }}/v3/clusters/{{ cluster_response.json.data[0].id }}/clusterregistrationtokens"
+    headers:
+      Authorization: Bearer {{ login_response.json.token }}
+    method: GET
+    validate_certs: false
+    status_code: 200
+  register: clusterregistrationtokens_response
+  when: cluster_response is succeeded
+
+- name: "Store nodeCommand"
+  ansible.builtin.set_fact:
+    node_command: "{{ clusterregistrationtokens_response.json.data[0].nodeCommand }}"
+  when: clusterregistrationtokens_response is succeeded
+
+- name: Register worker nodes
+  ansible.builtin.raw: "{{ node_command }} --worker"
+  changed_when: false

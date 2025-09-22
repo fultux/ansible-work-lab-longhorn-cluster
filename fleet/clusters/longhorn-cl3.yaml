@@ -1,0 +1,62 @@
+apiVersion: provisioning.cattle.io/v1
+kind: Cluster
+metadata:
+  name: longhorn-cl3
+spec:
+  enableNetworkPolicy: false
+  kubernetesVersion: v1.30.8+k3s1
+  localClusterAuthEndpoint: {}
+  rkeConfig:
+    chartValues: {}
+    dataDirectories: {}
+    etcd:
+      snapshotRetention: 5
+      snapshotScheduleCron: 0 */5 * * *
+    machineGlobalConfig:
+      disable-apiserver: false
+      disable-cloud-controller: false
+      disable-controller-manager: false
+      disable-etcd: false
+      disable-kube-proxy: false
+      disable-network-policy: false
+      disable-scheduler: false
+      etcd-expose-metrics: false
+      secrets-encryption: true
+    machinePoolDefaults: {}
+    machineSelectorConfig:
+      - config:
+          docker: false
+          protect-kernel-defaults: false
+          selinux: false
+    registries:
+      mirrors:
+        registry.rancher.com:
+          endpoint:
+            - https://harbor.giebert.dev:8443/v2/registry.rancher.com
+    upgradeStrategy:
+      controlPlaneConcurrency: '1'
+      controlPlaneDrainOptions:
+        deleteEmptyDirData: true
+        disableEviction: false
+        enabled: false
+        force: false
+        gracePeriod: -1
+        ignoreDaemonSets: true
+        ignoreErrors: false
+        postDrainHooks: null
+        preDrainHooks: null
+        skipWaitForDeleteTimeoutSeconds: 0
+        timeout: 120
+      workerConcurrency: '1'
+      workerDrainOptions:
+        deleteEmptyDirData: true
+        disableEviction: false
+        enabled: false
+        force: false
+        gracePeriod: -1
+        ignoreDaemonSets: true
+        ignoreErrors: false
+        postDrainHooks: null
+        preDrainHooks: null
+        skipWaitForDeleteTimeoutSeconds: 0
+        timeout: 120

@@ -1,0 +1,13 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: BlockChaos
+metadata:
+  name: block-longhorn-engine
+spec:
+  selector:
+    namespaces:
+      - longhorn-system
+    labelSelectors:
+      app: longhorn-manager
+  mode: one
+  volumeName: engine-binaries
+  action: freeze

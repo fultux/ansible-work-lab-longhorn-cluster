@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: longhorn-metrics
+  namespace: longhorn-system
+spec:
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              prometheus: rancher-monitoring-prometheus
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cattle-monitoring-system
+
+  podSelector:
+    matchLabels:
+      app: longhorn-manager
+  policyTypes:
+    - Ingress

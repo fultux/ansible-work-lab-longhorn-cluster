@@ -1,0 +1,70 @@
+---
+- name: Create worker vms
+  community.general.proxmox_kvm:
+    node: "{{ node_name }}"
+    api_user: "{{ proxmox_user }}"
+    api_password: "{{ proxmox_pass }}"
+    api_host: "{{ proxmox_api_target }}"
+    name: "{{ item.0 }}"
+    clone: "{{ worker_template_name }}"
+    vmid: "{{ worker_template_id }}"
+    full: true
+    newid: "{{ item.1 }}"
+    net:
+      net0: 'virtio,bridge="{{ proxmox_network_bridge }}"'
+    storage: "{{ proxmox_storage }}"
+    state: present
+    timeout: 300
+  with_together:
+    - "{{ worker_vm_name }}"
+    - "{{ worker_vm_ids }}"
+
+- name: Configure worker vms
+  community.general.proxmox_kvm:
+    node: "{{ node_name }}"
+    api_user: "{{ proxmox_user }}"
+    api_password: "{{ proxmox_pass }}"
+    api_host: "{{ proxmox_api_target }}"
+    name: "{{ item.0 }}"
+    vmid: "{{ item.1 }}"
+    cores: "{{ worker_vm_cores }}"
+    sockets: "{{ worker_vm_sockets }}"
+    memory: "{{ worker_vm_memory }}"
+    agent: true
+    ciuser: "{{ worker_vms_username }}"
+    cipassword: "{{ worker_vms_password }}"
+    sshkeys: "{{ ssh_key }}"
+    nameservers: "{{ vms_nameservers }}"
+    # ipconfig:
+    #   ipconfig0: 'ip={{ item.2 }}/{{ vms_subnet }},gw={{ vms_gateway }}'
+    update: true
+  with_together:
+    - "{{ worker_vm_name }}"
+    - "{{ worker_vm_ids }}"
+    # - "{{ worker_vm_ips }}"
+
+- name: Start worker vms
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_user }}"
+    api_password: "{{ proxmox_pass }}"
+    api_host: "{{ proxmox_api_target }}"
+    name: "{{ item }}"
+    node: "{{ node_name }}"
+    state: started
+  with_items: "{{ worker_vm_name }}"
+
+- name: Sleep for 60 seconds to wait for proper boot sequence
+  ansible.builtin.wait_for:
+    timeout: 60
+  delegate_to: localhost
+
+# Hack for registering with the proper dhcp name
+- name: Restart worker vms
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_user }}"
+    api_password: "{{ proxmox_pass }}"
+    api_host: "{{ proxmox_api_target }}"
+    name: "{{ item }}"
+    node: "{{ node_name }}"
+    state: restarted
+  with_items: "{{ worker_vm_name }}"

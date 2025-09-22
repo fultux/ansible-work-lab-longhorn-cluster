@@ -1,0 +1,104 @@
+---
+- name: Provision vm on proxmox
+  vars:
+    proxmox_user: "{{ lookup ('env', 'PROXMOX_USER') }}"
+    proxmox_pass: "{{ lookup ('env', 'PROXMOX_PASSWORD') }}"
+    proxmox_api_target: "192.168.3.106:8006"
+    proxmox_storage: local-lvm
+    proxmox_network_bridge: vmnet1
+    vms_password: "{{ lookup ('env', 'VM_PASSWORD') }}"
+    vms_username: "{{ lookup ('env', 'VM_USERNAME') }}"
+    ssh_key: "{{ lookup ('env', 'SSH_KEY') }}"
+    rancher_vm_names:
+      - rancher-node1
+      - rancher-node2
+      - rancher-node3
+    rancher_vm_ips:
+      - 172.16.1.251
+      - 172.16.1.252
+      - 172.16.1.253
+    template_name: template-micro-base
+    template_ids:
+      - 104
+      - 101
+      - 106
+    rancher_vm_id:
+      - 111
+      - 112
+      - 113
+    proxmox_nodes:
+      - proxmox-1
+      - proxmox-2
+      - proxmox-3
+    rancher_clone_target: template-micro-base
+    rancher_vm_cores: 4
+    rancher_vm_sockets: 2
+    rancher_vm_memory: 16384
+    vms_subnet: 24
+    vms_gateway: 172.16.1.1
+    vms_nameservers: 172.16.1.1
+
+  hosts: localhost
+
+
+  tasks:
+    - name: Create Rancher vms
+      community.general.proxmox_kvm:
+        node: "{{ item.1 }}"
+        api_user: "{{ proxmox_user }}"
+        api_password: "{{ proxmox_pass }}"
+        api_host: "{{ proxmox_api_target }}"
+        name: "{{ item.0 }}"
+        clone: "{{ template_name }}"
+        vmid: "{{ item.2 }}"
+        full: true
+        newid: "{{ item.3 }}"
+        net:
+          net0: 'virtio,bridge="{{ proxmox_network_bridge }}"'
+        storage: "{{ proxmox_storage }}"
+        state: present
+        timeout: 300
+      loop: "{{ rancher_vm_names | zip(proxmox_nodes, template_ids, rancher_vm_id ) | list }}"
+
+    - name: Update Rancher vms with new Cloud-init
+      community.general.proxmox_kvm:
+        node: "{{ item.1 }}"
+        api_user: "{{ proxmox_user }}"
+        api_password: "{{ proxmox_pass }}"
+        api_host: "{{ proxmox_api_target }}"
+        name: "{{ item.0 }}"
+        vmid: "{{ item.2 }}"
+        cores: "{{ rancher_vm_cores }}"
+        sockets: "{{ rancher_vm_sockets }}"
+        memory: "{{ rancher_vm_memory }}"
+        agent: enabled=1
+        ciuser: "{{ vms_username }}"
+        cipassword: "{{ vms_password }}"
+        sshkeys: "{{ ssh_key }}"
+        nameservers: "{{ vms_nameservers }}"
+        ipconfig:
+          ipconfig0: 'ip={{ item.3 }}/{{ vms_subnet }},gw={{ vms_gateway }}'
+        update: true
+      loop: "{{ rancher_vm_names | zip(proxmox_nodes, rancher_vm_id, rancher_vm_ips) | list }}"
+
+
+    - name: Sleep for 10 seconds to wait for VMID
+      ansible.builtin.wait_for:
+        timeout: 10
+      delegate_to: localhost
+
+
+    - name: Start Rancher vms
+      community.general.proxmox_kvm:
+        api_user: "{{ proxmox_user }}"
+        api_password: "{{ proxmox_pass }}"
+        api_host: "{{ proxmox_api_target }}"
+        name: "{{ item.0 }}"
+        node: "{{ item.1 }}"
+        state: started
+      loop: "{{ rancher_vm_names  | zip(proxmox_nodes) | list }}"
+
+    - name: Sleep for 30 seconds to wait for proper boot sequence
+      ansible.builtin.wait_for:
+        timeout: 30
+      delegate_to: localhost

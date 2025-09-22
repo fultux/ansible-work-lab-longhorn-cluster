@@ -1,0 +1,45 @@
+---
+- name: Provision vm downstream
+  vars:
+      node_name: proxmox-3
+      proxmox_user: "{{ lookup ('env', 'PROXMOX_USER') }}"
+      proxmox_pass: "{{ lookup ('env', 'PROXMOX_PASSWORD') }}"
+      proxmox_api_target: "192.168.3.106:8006"
+      proxmox_storage: hdd
+      proxmox_network_bridge: vmnet1
+      vms_password: "{{ lookup ('env', 'VM_PASSWORD') }}"
+      vms_username: "{{ lookup ('env', 'VM_USERNAME') }}"
+      ssh_key: "{{ lookup ('env', 'SSH_KEY') }}"
+      vms_subnet: 24
+      vms_gateway: 192.168.3.1
+      vms_nameservers: 192.168.3.1
+
+      controlplane_template_name: template-sle-micro
+      controlplane_template_id: 109
+      controlplane_vm_name:
+          - longhorn-cl3-ctrl1
+      controlplane_vm_ids:
+          - 121
+      controlplane_vm_cores: 4
+      controlplane_vm_sockets: 1
+      controlplane_vm_memory: 4096
+      controlplane_vms_username: rancher
+      controlplane_vms_password: rancher
+
+      worker_template_name: template-sle-micro
+      worker_template_id: 109
+      worker_vm_name:
+          - longhorn-cl3-wrk1
+          - longhorn-cl3-wrk2
+      worker_vm_ids:
+          - 122
+          - 123
+      worker_vm_cores: 4
+      worker_vm_sockets: 2
+      worker_vm_memory: 8192
+      worker_vms_username: rancher
+      worker_vms_password: rancher
+
+  hosts: localhost
+  roles:
+      - role: create_downstream_vms

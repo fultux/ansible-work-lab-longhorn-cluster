@@ -1,0 +1,70 @@
+---
+- name: Create controlplane vms
+  community.general.proxmox_kvm:
+    node: "{{ node_name }}"
+    api_user: "{{ proxmox_user }}"
+    api_password: "{{ proxmox_pass }}"
+    api_host: "{{ proxmox_api_target }}"
+    name: "{{ item.0 }}"
+    clone: "{{ controlplane_template_name }}"
+    vmid: "{{ controlplane_template_id }}"
+    full: true
+    newid: "{{ item.1 }}"
+    net:
+      net0: 'virtio,bridge="{{ proxmox_network_bridge }}"'
+    storage: "{{ proxmox_storage }}"
+    state: present
+    timeout: 300
+  with_together:
+    - "{{ controlplane_vm_name }}"
+    - "{{ controlplane_vm_ids }}"
+
+- name: Configure controlplane vms
+  community.general.proxmox_kvm:
+    node: "{{ node_name }}"
+    api_user: "{{ proxmox_user }}"
+    api_password: "{{ proxmox_pass }}"
+    api_host: "{{ proxmox_api_target }}"
+    name: "{{ item.0 }}"
+    vmid: "{{ item.1 }}"
+    cores: "{{ controlplane_vm_cores }}"
+    sockets: "{{ controlplane_vm_sockets }}"
+    memory: "{{ controlplane_vm_memory }}"
+    agent: true
+    ciuser: "{{ controlplane_vms_username }}"
+    cipassword: "{{ controlplane_vms_password }}"
+    sshkeys: "{{ ssh_key }}"
+    nameservers: "{{ vms_nameservers }}"
+    # ipconfig:
+    #   ipconfig0: 'ip={{ item.2 }}/{{ vms_subnet }},gw={{ vms_gateway }}'
+    update: true
+  with_together:
+    - "{{ controlplane_vm_name }}"
+    - "{{ controlplane_vm_ids }}"
+    # - "{{ controlplane_vm_ips  }}"
+
+- name: Start Rancher vms
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_user }}"
+    api_password: "{{ proxmox_pass }}"
+    api_host: "{{ proxmox_api_target }}"
+    name: "{{ item }}"
+    node: "{{ node_name }}"
+    state: started
+  with_items: "{{ controlplane_vm_name }}"
+
+- name: Sleep for 60 seconds to wait for proper boot sequence
+  ansible.builtin.wait_for:
+    timeout: 60
+  delegate_to: localhost
+
+# Hack for registering with the proper dhcp name
+- name: Restart worker vms
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_user }}"
+    api_password: "{{ proxmox_pass }}"
+    api_host: "{{ proxmox_api_target }}"
+    name: "{{ item }}"
+    node: "{{ node_name }}"
+    state: restarted
+  with_items: "{{ controlplane_vm_name }}"

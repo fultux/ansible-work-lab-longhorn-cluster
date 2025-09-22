@@ -1,0 +1,23 @@
+- name: Configure controlplanes downstream cluster
+  vars:
+    rancher_hostname: rancher.giebert.eu
+    rancher_username: admin
+    rancher_password: "{{ lookup ('env', 'RANCHER_PASSWORD') }}"
+    cluster_name: longhorn-cl2
+    kubeconfig_path: ~/.kube
+    node_type: controlplane
+  hosts: longhorn-cl2-controlplanes
+  roles:
+    - role: configure_downstream
+
+- name: Configure workers downstream cluster
+  vars:
+    rancher_hostname: rancher.giebert.eu
+    rancher_username: admin
+    rancher_password: "{{ lookup ('env', 'RANCHER_PASSWORD') }}"
+    cluster_name: longhorn-cl2
+    kubeconfig_path: ~/.kube
+    node_type: worker
+  hosts: longhorn-cl2-workers
+  roles:
+    - role: configure_downstream

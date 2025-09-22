@@ -1,0 +1,13 @@
+- name: Get Kubeconfig
+  ansible.builtin.include_tasks: get_kubeconfig.yml
+
+- name: Install requirements
+  ansible.builtin.include_tasks: install_requirements.yml
+
+- name: Register controlplanes
+  ansible.builtin.include_tasks: register_controlplanes.yml
+  when: node_type == "controlplane"
+
+- name: Register workers
+  ansible.builtin.include_tasks: register_workers.yml
+  when: node_type == "worker"

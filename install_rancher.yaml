@@ -1,0 +1,250 @@
+---
+- name: RKE2 configuration and install on the first node
+  hosts: rancher-node1
+  become: true
+  tasks:
+    - name: Populate service facts
+      ansible.builtin.service_facts:
+
+    - name: Get the presence or not of the rke2-server service
+      ansible.builtin.debug:
+        msg: rke2-server service is present!
+      when: "'rke2-server.service' in services"
+
+    - name: Create rke2 directory
+      ansible.builtin.file:
+        path: /etc/rancher/rke2
+        state: directory
+        owner: root
+        mode: '0755'
+
+    - name: Configure rke2 on the first node
+      ansible.builtin.template:
+        src: templates/rke2-rancher-first.j2
+        dest: /etc/rancher/rke2/config.yaml
+        owner: root
+        group: root
+        mode: '0755'
+      notify: Restart rke2
+
+    - name: Get the installation script on the first node
+      ansible.builtin.get_url:
+        url: https://get.rke2.io
+        dest: /tmp/install.sh
+        mode: '0755'
+      when: "'rke2-server.service' not in services"
+
+    - name: Install rke2 on the first node
+      ansible.builtin.command:
+        cmd: /tmp/install.sh
+      environment:
+        INSTALL_RKE2_VERSION: "{{ rke2_version }}"
+      changed_when: false
+      when: "'rke2-server.service' not in services"
+
+    - name: Enable rke2 on the first node
+      ansible.builtin.service:
+        name: rke2-server
+        enabled: true
+        state: started
+      when: "'rke2-server.service' not in services"
+
+    - name: Get the Kubeconfig frome the first node.
+      ansible.builtin.fetch:
+        src: /etc/rancher/rke2/rke2.yaml
+        dest: "{{ rancher_kubeconfig_path }}"
+        mode: '0600'
+        flat: true
+
+  handlers:
+    - name: Restart rke2
+      ansible.builtin.service:
+        name: rke2-server
+        state: restarted
+
+- name: RKE2 configuration and install on the first node
+  hosts: rancher-node2
+  become: true
+  tasks:
+    - name: Populate service facts
+      ansible.builtin.service_facts:
+
+    - name: Get the presence or not of the rke2-server service
+      ansible.builtin.debug:
+        msg: rke2-server service is present!
+      when: "'rke2-server.service' in services"
+
+    - name: Create rke2 directory
+      ansible.builtin.file:
+        path: /etc/rancher/rke2
+        state: directory
+        owner: root
+        mode: '0755'
+
+    - name: Configure rke2 on the second node
+      ansible.builtin.template:
+        src: templates/rke2-rancher-nodes.j2
+        dest: /etc/rancher/rke2/config.yaml
+        owner: root
+        group: root
+        mode: '0755'
+      notify: Restart rke2
+
+    - name: Get the installation script on the second node
+      ansible.builtin.get_url:
+        url: https://get.rke2.io
+        dest: /tmp/install.sh
+        mode: '0700'
+      when: "'rke2-server.service' not in services"
+
+    - name: Install rke2 on the second node
+      ansible.builtin.command:
+        cmd: /tmp/install.sh
+      environment:
+        INSTALL_RKE2_VERSION: "{{ rke2_version }}"
+      changed_when: false
+      when: "'rke2-server.service' not in services"
+
+    - name: Enable rke2 on the second node
+      ansible.builtin.service:
+        name: rke2-server
+        enabled: true
+        state: started
+      when: "'rke2-server.service' not in services"
+
+  handlers:
+    - name: Restart rke2
+      ansible.builtin.service:
+        name: rke2-server
+        state: restarted
+
+
+- name: RKE2 configuration and install on the third node
+  hosts: rancher-node3
+  become: true
+  tasks:
+    - name: Populate service facts
+      ansible.builtin.service_facts:
+
+    - name: Get the presence or not of the rke2-server service
+      ansible.builtin.debug:
+        msg: rke2-server service is present!
+      when: "'rke2-server.service' in services"
+
+    - name: Create rke2 directory
+      ansible.builtin.file:
+        path: /etc/rancher/rke2
+        state: directory
+        owner: root
+        mode: '0755'
+
+    - name: Configure rke2 on the third node
+      ansible.builtin.template:
+        src: templates/rke2-rancher-nodes.j2
+        dest: /etc/rancher/rke2/config.yaml
+        owner: root
+        group: root
+        mode: '0755'
+      notify: Restart rke2
+
+    - name: Get the installation script on the third node
+      ansible.builtin.get_url:
+        url: https://get.rke2.io
+        dest: /tmp/install.sh
+        mode: '0700'
+      when: "'rke2-server.service' not in services"
+
+    - name: Install rke2 on the third node
+      ansible.builtin.command:
+        cmd: /tmp/install.sh
+      changed_when: false
+      environment:
+        INSTALL_RKE2_VERSION: "{{ rke2_version }}"
+      when: "'rke2-server.service' not in services"
+
+    - name: Enable rke2 on the third node
+      ansible.builtin.service:
+        name: rke2-server
+        enabled: true
+        state: started
+      when: "'rke2-server.service' not in services"
+
+  handlers:
+    - name: Restart rke2
+      ansible.builtin.service:
+        name: rke2-server
+        state: restarted
+
+- name: Rancher installation on the RKE2 cluster
+  hosts: localhost
+  environment:
+    K8S_AUTH_KUBECONFIG: "{{ rancher_kubeconfig_path }}"
+    KUBECONFIG: "{{ rancher_kubeconfig_path }}"
+  tasks:
+    - name: Replace url of the server in Kubeconfig
+      ansible.builtin.replace:
+        path: "{{ rancher_kubeconfig_path }}"
+        regexp: '127.0.0.1'
+        replace: "{{ rancher_url }}"
+    - name: Add the certmanager repo
+      kubernetes.core.helm_repository:
+        name: jetstack
+        repo_url: https://charts.jetstack.io
+
+    - name: Add the Rancher  repo
+      kubernetes.core.helm_repository:
+        name: rancher-prime
+        repo_url: https://charts.rancher.com/server-charts/prime
+
+
+#   - name: Install certmanager
+#     kubernetes.core.helm:
+#       name: cert-manager
+#       chart_ref: jetstack/cert-manager
+#        chart_version: "{{ certmanager_version }}"
+#        release_namespace: cert-manager
+#        create_namespace: true
+#        values:
+#          installCRDs: true
+
+
+    - name: Create the cattle-system create_namespace
+      kubernetes.core.k8s:
+        name: cattle-system
+        api_version: v1
+        kind: Namespace
+        state: present
+
+    - name: Check if tls-rancher-ingress secret exists
+      ansible.builtin.set_fact:
+        secret: "{{ query('kubernetes.core.k8s', kind='secret', namespace='cattle-system', resource_name='tl-rancher-ingress') }}"
+
+    - name: Import cert and key into Kubernetes
+      ansible.builtin.command:
+        cmd: kubectl --kubeconfig=/home/rancher/.kube/rancher_rke2.yaml -n cattle-system create secret tls tls-rancher-ingress --cert=tls.crt --key=tls.key
+        chdir: certificates/
+      changed_when: false
+      when: service | length > 0
+
+    - name: Import cacert into Kubernetes
+      ansible.builtin.command:
+        cmd: kubectl --kubeconfig=/home/rancher/.kube/rancher_rke2.yaml -n cattle-system create secret generic tls-ca --from-file=cacerts.pem=./cacerts.pem
+        chdir: certificates/
+      changed_when: false
+      when: service | length > 0
+
+    - name: Install Rancher
+      kubernetes.core.helm:
+        name: rancher
+        chart_ref: rancher-prime/rancher
+        release_namespace: cattle-system
+        set_values:
+          - value: "hostname={{ rancher_url }}"
+            value_type: string
+        values:
+          version: "{{ rancher_version }}"
+          bootstrapPassword: "{{ rancher_bootstrap_password }}"
+          privateCA: true
+          ingress:
+            tls:
+              source: secret

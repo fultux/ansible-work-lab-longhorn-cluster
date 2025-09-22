@@ -1,0 +1,16 @@
+defaultNamespace: longhorn-system
+helm:
+  repo: https://charts.rancher.io
+  version: "105.1.0+up1.7.2"
+  chart: longhorn
+  releaseName: longhorn
+  valuesFiles:
+    - "values.yaml"
+
+dependsOn:
+  - selector:
+      matchLabels:
+        app: longhorn-crds
+  - selector:
+      matchLabels:
+        app: rancher-monitoring-crd

@@ -1,0 +1,42 @@
+global:
+  cattle:
+    systemDefaultRegistry: "registry.rancher.com"
+
+networkPolicies:
+  enabled: true
+  type: k3s
+
+metrics:
+  serviceMonitor:
+    enabled: true
+
+# https://github.com/longhorn/charts/blob/v1.8.x/charts/longhorn/templates/default-setting.yaml
+defaultSettings:
+  # priorityClass: longhorn-critical
+  allowVolumeCreationWithDegradedAvailability: false
+  concurrentAutomaticEngineUpgradePerNodeLimit: 3
+  # Disable Overprovisioning
+  storageOverProvisioningPercentage: 100
+  storageMinimalAvailablePercentage: 10
+  # Detect Hard Disk Errors more often
+  snapshotDataIntegrity: enabled
+  snapshotDataIntegrityCronjob: "30 1 * * *"
+  fastReplicaRebuildEnabled: true
+  # Running on a smaller cluster
+  defaultReplicaCount: 2
+  # https://longhorn.io/docs/1.7.2/references/settings/#pod-deletion-policy-when-node-is-down
+  nodeDownPodDeletionPolicy: "delete-both-statefulset-and-deployment-pod"
+  defaultDataLocality: best-effort
+  replicaAutoBalance: least-effort
+  
+# Just because we are running on a smaller cluster
+csi:
+  attacherReplicaCount: 2
+  provisionerReplicaCount: 2
+  resizerReplicaCount: 2
+  snapshotterReplicaCount: 2
+
+# Needed for the defualt StorageClass
+persistence:
+  defaultClassReplicaCount: 2
+  defaultDataLocality: best-effort

@@ -1,0 +1,15 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: corrupt-replica-traffic
+spec:
+  action: corrupt
+  mode: one # We select a single corrupt network card
+  selector:
+    namespaces:
+      - longhorn-system
+    labelSelectors:
+      app: longhorn-manager
+  delay:
+    corrupt: 50
+    correlation: 25

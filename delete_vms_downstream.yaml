@@ -1,0 +1,54 @@
+---
+- name: Remove vm on proxmox
+  vars:
+    vms_id:
+      # cl1
+      - 115
+      - 116
+      - 117
+      # cl2
+      # - 118
+      # - 119
+      # - 120
+      # cl3
+      # - 121
+      # - 122
+      # - 123
+      # cl4
+      # - 124
+      # - 125
+      # - 126
+      # cl5
+      # - 127
+      # - 128
+      # - 129
+      # bck
+      # - 130
+      # - 131
+      # - 132
+    proxmox_user: "{{ lookup ('env', 'PROXMOX_USER') }}"
+    proxmox_pass: "{{ lookup ('env', 'PROXMOX_PASSWORD') }}"
+    proxmox_api_target: "192.168.3.106:8006"
+    proxmox_nodes: proxmox-1
+
+  hosts: localhost
+  tasks:
+    - name: Stop VM
+      community.general.proxmox_kvm:
+        api_user: "{{ proxmox_user }}"
+        api_password: "{{ proxmox_pass }}"
+        api_host: "{{ proxmox_api_target }}"
+        vmid: "{{ item }}"
+        state: stopped
+        timeout: 300
+      loop: "{{ vms_id | list }}"
+
+    - name: Delete VM
+      community.general.proxmox_kvm:
+        # node: "{{ proxmox_nodes }}"
+        api_user: "{{ proxmox_user }}"
+        api_password: "{{ proxmox_pass }}"
+        api_host: "{{ proxmox_api_target }}"
+        vmid: "{{ item }}"
+        state: absent
+      loop: "{{ vms_id | list }}"

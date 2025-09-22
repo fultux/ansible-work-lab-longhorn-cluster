@@ -1,0 +1,5 @@
+- name: Create controlplane vms
+  ansible.builtin.include_tasks: create_controlplane_nodes.yml
+
+- name: Create controlplane vms
+  ansible.builtin.include_tasks: create_worker_nodes.yml

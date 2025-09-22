@@ -1,0 +1,10 @@
+write-kubeconfig-mode: "0644"
+tls-san:
+  - "{{ rancher_url }}"
+  - 192.168.3.168
+node-label:
+  - "rancher"
+token: {{ rancher_token }}
+cni: 
+- {{ rancher_cni }}
+debug: true
