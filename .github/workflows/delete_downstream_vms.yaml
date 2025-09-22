@@ -2,7 +2,7 @@ name: Destroy downstream 1
 on: workflow_dispatch
 jobs:
   lint:
-    runs-on: [self-hosted, jump-host]
+    runs-on: [self-hosted, work-lab]
     steps:
       - uses: actions/checkout@v4
       - name: Run ansible-lint
