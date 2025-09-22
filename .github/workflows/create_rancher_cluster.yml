@@ -1,0 +1,44 @@
+name: Create Rancher cluster
+on:
+   workflow_dispatch
+jobs:
+  lint:
+    runs-on: [self-hosted, jump-host]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ansible-lint
+        run: |
+          source ~/ansible/ansible-venv/bin/activate
+          ansible-lint
+  deploy_vm_rancher:
+    needs: lint
+    runs-on: [self-hosted, jump-host]
+    steps:
+      - name: Deploy Rancher
+        shell: bash
+        env:
+          PROXMOX_USER: ${{ secrets.PROXMOX_USER }}
+          PROXMOX_PASSWORD: ${{ secrets.PROXMOX_PASSWORD }}
+          PROXMOX_URI: ${{ secrets.PROXMOX_URI }}
+          VM_USERNAME: ${{ secrets.VM_USERNAME }}
+          VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          source ~/ansible/ansible-venv/bin/activate
+          ansible-playbook create_vm_rancher.yaml
+
+  install_rancher:
+    needs: deploy_vm_rancher
+    runs-on: [self-hosted, jump-host]
+    steps:
+      - name: Deploy Rancher
+        shell: bash
+        env:
+          PROXMOX_USER: ${{ secrets.PROXMOX_USER }}
+          PROXMOX_PASSWORD: ${{ secrets.PROXMOX_PASSWORD }}
+          PROXMOX_URI: ${{ secrets.PROXMOX_URI }}
+          RANCHER_BOOTSTRAP_PASSWORD: ${{ secrets.RANCHER_BOOTSTRAP_PASSWORD }}
+          ANSIBLE_HOST_KEY_CHECKING: False
+        run: |
+          source ~/ansible/ansible-venv/bin/activate
+          ansible-playbook install_rancher.yaml -i inventory/inventory
