@@ -36,7 +36,7 @@
 
 - name: "Store nodeCommand"
   ansible.builtin.set_fact:
-    node_command: "{{ clusterregistrationtokens_response.json.data[0].nodeCommand }}"
+    node_command: "{{ clusterregistrationtokens_response.json.data[0].insecureNodeCommand }}"
   when: clusterregistrationtokens_response is succeeded
 
 - name: "Check if RKE2 is already installed"
