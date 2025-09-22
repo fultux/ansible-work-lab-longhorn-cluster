@@ -12,7 +12,7 @@ jobs:
 
   deploy_vms_downstream_1:
     needs: lint
-    runs-on: [self-hosted, jump-host]
+    runs-on: [self-hosted, work-lab]
     steps:
       - name: create vms cluster 1
         shell: bash
