@@ -7,7 +7,6 @@
     kubeconfig_path: ~/.kube
     node_type: controlplane
   hosts: longhorn-cl1-controlplanes
-  ansible_python_interpreter: /usr/bin/python3
   roles:
     - role: configure_downstream
 
@@ -20,6 +19,5 @@
     kubeconfig_path: ~/.kube
     node_type: worker
   hosts: longhorn-cl1-workers
-  ansible_python_interpreter: /usr/bin/python3
   roles:
     - role: configure_downstream
