@@ -1,4 +1,4 @@
-name: Destroy vms downstream
+name: Destroy vms
 on: workflow_dispatch
 jobs:
   lint:

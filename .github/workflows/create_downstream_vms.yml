@@ -1,4 +1,4 @@
-name: Create donwstream VMs
+name: Create VMs
 on: workflow_dispatch
 jobs:
   lint:

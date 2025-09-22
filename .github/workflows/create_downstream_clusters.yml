@@ -1,4 +1,4 @@
-name: Create donwstream cluster
+name: Register downstream nodes
 on:
   workflow_dispatch:
 
