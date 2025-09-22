@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run ansible-lint
         run: |
-          source ~/ansible/ansible-venv/bin/activate
+          source ~/ansible/ansible-11/bin/activate
           ansible-lint
 
   config_downstream_1:
@@ -22,5 +22,5 @@ jobs:
           RANCHER_PASSWORD: ${{ secrets.RANCHER_PASSWORD }}
           ANSIBLE_HOST_KEY_CHECKING: False
         run: |
-          source ~/ansible/ansible-venv/bin/activate
+          source ~/ansible/ansible-11/bin/activate
           ansible-playbook cluster_longhorn_cl1.yaml -i inventory/inventory

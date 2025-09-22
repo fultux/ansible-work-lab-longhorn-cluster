@@ -7,5 +7,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run ansible-lint
         run: |
-          source ~/ansible/ansible-venv/bin/activate
+          source ~/ansible/ansible-11/bin/activate
           ansible-lint
