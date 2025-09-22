@@ -39,6 +39,11 @@
     node_command: "{{ clusterregistrationtokens_response.json.data[0].nodeCommand }}"
   when: clusterregistrationtokens_response is succeeded
 
-- name: Register worker nodes
-  ansible.builtin.raw: "{{ node_command }} --worker"
-  changed_when: false
+- name: "Check if RKE2 is already installed"
+  stat:
+    path: /opt/rke2/bin/rke2
+  register: rke2_installed
+
+- name: "Register worker node"
+  shell: "{{ node_command }} --worker"
+  when: rke2_installed.stat.exists == false
