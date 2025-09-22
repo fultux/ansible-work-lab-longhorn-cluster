@@ -1,7 +1,8 @@
 ---
 - name: Install open-iscsi
   community.general.zypper:
-   name: open-iscsi
-   state: present
+    name: open-iscsi
+    state: present
   notify: Reboot iscsi installed
   become: true
+  become_method: enable
