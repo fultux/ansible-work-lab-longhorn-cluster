@@ -1,45 +1,47 @@
 ---
 - name: Provision vm downstream
   vars:
-      node_name: proxmox-1
-      proxmox_user: "{{ lookup ('env', 'PROXMOX_USER') }}"
-      proxmox_pass: "{{ lookup ('env', 'PROXMOX_PASSWORD') }}"
-      proxmox_api_target: "192.168.3.106:8006"
-      proxmox_storage: hdd
-      proxmox_network_bridge: vmnet1
-      vms_password: "{{ lookup ('env', 'VM_PASSWORD') }}"
-      vms_username: "{{ lookup ('env', 'VM_USERNAME') }}"
-      ssh_key: "{{ lookup ('env', 'SSH_KEY') }}"
-      vms_subnet: 24
-      vms_gateway: 192.168.3.1
-      vms_nameservers: 192.168.3.1
+    node_name: proxmox
+    proxmox_user: "{{ lookup ('env', 'PROXMOX_USER') }}"
+    proxmox_pass: "{{ lookup ('env', 'PROXMOX_PASSWORD') }}"
+    proxmox_api_target: "10.0.10.254:8006"
+    proxmox_storage: ssd
+    proxmox_network_bridge: vmbr1
+    vms_password: "{{ lookup ('env', 'VM_PASSWORD') }}"
+    vms_username: "{{ lookup ('env', 'VM_USERNAME') }}"
+    ssh_key: "{{ lookup ('env', 'SSH_KEY') }}"
+    vms_subnet: 24
+    vms_gateway: 10.20.0.1
+    vms_nameservers: 10.0.10.253
 
-      controlplane_template_name: template-sle-micro
-      controlplane_template_id: 110
-      controlplane_vm_name:
-          - longhorn-cl1-ctrl1
-      controlplane_vm_ids:
-          - 115
-      controlplane_vm_cores: 4
-      controlplane_vm_sockets: 1
-      controlplane_vm_memory: 4096
-      controlplane_vms_username: rancher
-      controlplane_vms_password: rancher
+    controlplane_template_name: template-sle-micro
+    controlplane_template_id: 110
+    controlplane_vm_name:
+      - longhorn-cl1-ctrl1
+    controlplane_vm_ids:
+      - 115
+    controlplane_vm_cores: 4
+    controlplane_vm_sockets: 1
+    controlplane_vm_memory: 4096
+    controlplane_vms_username: rancher
+    controlplane_vms_password: rancher
 
-      worker_template_name: template-sle-micro
-      worker_template_id: 110
-      worker_vm_name:
-          - longhorn-cl1-wrk1
-          - longhorn-cl1-wrk2
-      worker_vm_ids:
-          - 116
-          - 117
-      worker_vm_cores: 4
-      worker_vm_sockets: 2
-      worker_vm_memory: 8192
-      worker_vms_username: rancher
-      worker_vms_password: rancher
+    worker_template_name: template-sle-micro
+    worker_template_id: 110
+    worker_vm_name:
+      - longhorn-cl1-wrk1
+      - longhorn-cl1-wrk2
+      - longhorn-cl1-wrk3
+    worker_vm_ids:
+      - 116
+      - 117
+      - 118
+    worker_vm_cores: 4
+    worker_vm_sockets: 2
+    worker_vm_memory: 8192
+    worker_vms_username: rancher
+    worker_vms_password: rancher
 
   hosts: localhost
   roles:
-      - role: create_downstream_vms
+    - role: create_downstream_vms

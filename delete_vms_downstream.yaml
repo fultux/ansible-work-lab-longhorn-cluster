@@ -6,30 +6,11 @@
       - 115
       - 116
       - 117
-      # cl2
-      # - 118
-      # - 119
-      # - 120
-      # cl3
-      # - 121
-      # - 122
-      # - 123
-      # cl4
-      # - 124
-      # - 125
-      # - 126
-      # cl5
-      # - 127
-      # - 128
-      # - 129
-      # bck
-      # - 130
-      # - 131
-      # - 132
+      - 118
     proxmox_user: "{{ lookup ('env', 'PROXMOX_USER') }}"
     proxmox_pass: "{{ lookup ('env', 'PROXMOX_PASSWORD') }}"
-    proxmox_api_target: "192.168.3.106:8006"
-    proxmox_nodes: proxmox-1
+    proxmox_api_target: "10.0.10.254:8006"
+    proxmox_nodes: proxmox
 
   hosts: localhost
   tasks:
