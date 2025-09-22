@@ -45,5 +45,6 @@
   register: rke2_installed
 
 - name: "Register worker node"
-  ansible.builtin.command: "{{ node_command }} --worker"
+  ansible.builtin.command:
+    cmd: "{{ node_command }} --worker"
   when: not rke2_installed.stat.exists
