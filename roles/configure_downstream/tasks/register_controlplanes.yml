@@ -45,6 +45,5 @@
   register: rke2_installed
 
 - name: "Register controlplane node"
-  ansible.builtin.command:
-    cmd: "{{ node_command }} --etcd --controlplane"
+  ansible.builtin.raw: "{{ node_command }} --etcd --controlplane"
   when: not rke2_installed.stat.exists
