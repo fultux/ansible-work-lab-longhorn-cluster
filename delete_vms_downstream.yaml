@@ -2,7 +2,6 @@
 - name: Remove vm on proxmox
   vars:
     vms_id:
-      # cl1
       - 115
       - 116
       - 117
@@ -26,7 +25,7 @@
 
     - name: Delete VM
       community.general.proxmox_kvm:
-        # node: "{{ proxmox_nodes }}"
+        node: "{{ proxmox_nodes }}"
         api_user: "{{ proxmox_user }}"
         api_password: "{{ proxmox_pass }}"
         api_host: "{{ proxmox_api_target }}"

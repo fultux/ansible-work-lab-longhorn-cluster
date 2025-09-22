@@ -9,4 +9,20 @@ jobs:
         run: |
           source ~/ansible/ansible-11/bin/activate
           ansible-lint
+  delete:
+    needs: lint
+    runs-on: [self-hosted, work-lab]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ansible-playbook
+        shell: bash
+        env:
+          PROXMOX_USER: ${{ secrets.PROXMOX_USER }}
+          PROXMOX_PASSWORD: ${{ secrets.PROXMOX_PASSWORD }}
+          PROXMOX_URI: ${{ secrets.PROXMOX_URI }}
+          VM_USERNAME: ${{ secrets.VM_USERNAME }}
+          VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          source ~/ansible/ansible-11/bin/activate
           ansible-playbook delete_vms_downstream.yaml
