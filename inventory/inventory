@@ -12,67 +12,7 @@ longhorn-cl1-workers
 [longhorn-cl1-workers]
 longhorn-cl1-wrk1 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
 longhorn-cl1-wrk2 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
+longhorn-cl1-wrk3 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
 
 [longhorn-cl1-controlplanes]
 longhorn-cl1-ctrl1 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-
-
-[longhorn-cl2:children]
-longhorn-cl2-controlplanes
-longhorn-cl2-workers
-
-[longhorn-cl2-workers]
-longhorn-cl2-wrk1 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-longhorn-cl2-wrk2 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-
-[longhorn-cl2-controlplanes]
-longhorn-cl2-ctrl1 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-
-
-[longhorn-cl3:children]
-longhorn-cl1-controlplanes
-longhorn-cl1-workers
-
-[longhorn-cl3-workers]
-longhorn-cl3-wrk1 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-longhorn-cl3-wrk2 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-
-[longhorn-cl3-controlplanes]
-longhorn-cl3-ctrl1 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-
-[longhorn-cl4:children]
-longhorn-cl4-controlplanes
-longhorn-cl4-workers
-
-[longhorn-cl4-workers]
-longhorn-cl4-wrk1 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-longhorn-cl4-wrk2 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-
-[longhorn-cl4-controlplanes]
-longhorn-cl4-ctrl1 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-
-
-
-[longhorn-cl5:children]
-longhorn-cl5-controlplanes
-longhorn-cl1-workers
-
-[longhorn-cl5-workers]
-longhorn-cl5-wrk1 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-longhorn-cl5-wrk2 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-
-[longhorn-cl5-controlplanes]
-longhorn-cl5-ctrl1 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-
-
-
-[longhorn-bck:children]
-longhorn-bck-controlplanes
-longhorn-bck-workers
-
-[longhorn-bck-workers]
-longhorn-bck-wrk1 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-longhorn-bck-wrk2 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-
-[longhorn-bck-controlplanes]
-longhorn-bck-ctrl1 ansible_user=rancher ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
