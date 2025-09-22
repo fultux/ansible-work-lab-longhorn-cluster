@@ -4,6 +4,9 @@
 - name: Install requirements
   ansible.builtin.include_tasks: install_requirements.yml
 
+- name: Flush handlers
+  meta: flush_handlers
+
 - name: Register controlplanes
   ansible.builtin.include_tasks: register_controlplanes.yml
   when: node_type == "controlplane"
