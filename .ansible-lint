@@ -94,7 +94,7 @@ offline: true
 #   - example_module
 
 # Allow setting custom prefix for name[prefix] rule
-task_name_prefix: "{stem} | "
+# task_name_prefix: "{stem} | "
 # Complexity related settings
 
 # Limit the depth of the nested blocks:
