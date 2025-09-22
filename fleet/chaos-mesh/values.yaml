@@ -1,7 +1,0 @@
-dashboard:
-  service:
-    type: ClusterIP
-
-  securityMode: false
-
-

@@ -1,0 +1,114 @@
+name: Create donwstream VMs
+on:
+  workflow_dispatch
+jobs:
+  lint:
+    runs-on: [self-hosted, jump-host]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ansible-lint
+        run: |
+          source ~/ansible/ansible-venv/bin/activate
+          ansible-lint
+
+  # deploy_vms_downstream_1:
+  #   needs: lint
+  #   runs-on: [self-hosted, jump-host]
+  #   steps:
+  #     - name: create vms cluster 1
+  #       shell: bash
+  #       env:
+  #         PROXMOX_USER: ${{ secrets.PROXMOX_USER }}
+  #         PROXMOX_PASSWORD: ${{ secrets.PROXMOX_PASSWORD }}
+  #         PROXMOX_URI: ${{ secrets.PROXMOX_URI }}
+  #         VM_USERNAME: ${{ secrets.VM_USERNAME }}
+  #         VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+  #         SSH_KEY: ${{ secrets.SSH_KEY }}
+  #       run: |
+  #         source ~/ansible/ansible-venv/bin/activate
+  #         ansible-playbook vms_longhorn_cl1.yaml
+
+  # deploy_vms_downstream_2:
+  #   needs: lint
+  #   runs-on: [self-hosted, jump-host]
+  #   steps:
+  #     - name: create vms cluster 2
+  #       shell: bash
+  #       env:
+  #         PROXMOX_USER: ${{ secrets.PROXMOX_USER }}
+  #         PROXMOX_PASSWORD: ${{ secrets.PROXMOX_PASSWORD }}
+  #         PROXMOX_URI: ${{ secrets.PROXMOX_URI }}
+  #         VM_USERNAME: ${{ secrets.VM_USERNAME }}
+  #         VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+  #         SSH_KEY: ${{ secrets.SSH_KEY }}
+  #       run: |
+  #         source ~/ansible/ansible-venv/bin/activate
+  #         ansible-playbook vms_longhorn_cl2.yaml
+
+  # deploy_vms_downstream_3:
+  #   needs: lint
+  #   runs-on: [self-hosted, jump-host]
+  #   steps:
+  #     - name: create vms cluster 3
+  #       shell: bash
+  #       env:
+  #         PROXMOX_USER: ${{ secrets.PROXMOX_USER }}
+  #         PROXMOX_PASSWORD: ${{ secrets.PROXMOX_PASSWORD }}
+  #         PROXMOX_URI: ${{ secrets.PROXMOX_URI }}
+  #         VM_USERNAME: ${{ secrets.VM_USERNAME }}
+  #         VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+  #         SSH_KEY: ${{ secrets.SSH_KEY }}
+  #       run: |
+  #         source ~/ansible/ansible-venv/bin/activate
+  #         ansible-playbook vms_longhorn_cl3.yaml
+
+  deploy_vms_downstream_4:
+    needs: lint
+    runs-on: [self-hosted, jump-host]
+    steps:
+      - name: create vms cluster 4
+        shell: bash
+        env:
+          PROXMOX_USER: ${{ secrets.PROXMOX_USER }}
+          PROXMOX_PASSWORD: ${{ secrets.PROXMOX_PASSWORD }}
+          PROXMOX_URI: ${{ secrets.PROXMOX_URI }}
+          VM_USERNAME: ${{ secrets.VM_USERNAME }}
+          VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          source ~/ansible/ansible-venv/bin/activate
+          ansible-playbook vms_longhorn_cl4.yaml
+
+  deploy_vms_downstream_5:
+    needs: lint
+    runs-on: [self-hosted, jump-host]
+    steps:
+      - name: create vms cluster 5
+        shell: bash
+        env:
+          PROXMOX_USER: ${{ secrets.PROXMOX_USER }}
+          PROXMOX_PASSWORD: ${{ secrets.PROXMOX_PASSWORD }}
+          PROXMOX_URI: ${{ secrets.PROXMOX_URI }}
+          VM_USERNAME: ${{ secrets.VM_USERNAME }}
+          VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          source ~/ansible/ansible-venv/bin/activate
+          ansible-playbook vms_longhorn_cl5.yaml
+
+  # deploy_vms_downstream_bck:
+  #   needs: lint
+  #   runs-on: [self-hosted, jump-host]
+  #   steps:
+  #     - name: create vms cluster bck
+  #       shell: bash
+  #       env:
+  #         PROXMOX_USER: ${{ secrets.PROXMOX_USER }}
+  #         PROXMOX_PASSWORD: ${{ secrets.PROXMOX_PASSWORD }}
+  #         PROXMOX_URI: ${{ secrets.PROXMOX_URI }}
+  #         VM_USERNAME: ${{ secrets.VM_USERNAME }}
+  #         VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+  #         SSH_KEY: ${{ secrets.SSH_KEY }}
+  #       run: |
+  #         source ~/ansible/ansible-venv/bin/activate
+  #         ansible-playbook vms_longhorn_bck.yaml

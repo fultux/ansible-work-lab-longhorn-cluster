@@ -1,6 +1,6 @@
 - name: Configure controlplanes downstream cluster
   vars:
-    rancher_hostname: rancher.giebert.eu
+    rancher_hostname: rancher.work.lan
     rancher_username: admin
     rancher_password: "{{ lookup ('env', 'RANCHER_PASSWORD') }}"
     cluster_name: longhorn-cl1
@@ -12,7 +12,7 @@
 
 - name: Configure workers downstream cluster
   vars:
-    rancher_hostname: rancher.giebert.eu
+    rancher_hostname: rancher.work.lan
     rancher_username: admin
     rancher_password: "{{ lookup ('env', 'RANCHER_PASSWORD') }}"
     cluster_name: longhorn-cl1

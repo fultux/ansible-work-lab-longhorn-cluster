@@ -1,0 +1,91 @@
+name: Create donwstream cluster
+on:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: [self-hosted, jump-host]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ansible-lint
+        run: |
+          source ~/ansible/ansible-venv/bin/activate
+          ansible-lint
+
+  # config_downstream_1:
+  #   needs: lint
+  #   runs-on: [self-hosted, jump-host]
+  #   steps:
+  #     - name: Configure downstream cluster 1
+  #       shell: bash
+  #       env:
+  #         RANCHER_PASSWORD: ${{ secrets.RANCHER_PASSWORD }}
+  #         ANSIBLE_HOST_KEY_CHECKING: False
+  #       run: |
+  #         source ~/ansible/ansible-venv/bin/activate
+  #         ansible-playbook cluster_longhorn_cl1.yaml -i inventory/inventory
+
+  # config_downstream_2:
+  #   needs: lint
+  #   runs-on: [self-hosted, jump-host]
+  #   steps:
+  #     - name: Configure downstream cluster 2
+  #       shell: bash
+  #       env:
+  #         RANCHER_PASSWORD: ${{ secrets.RANCHER_PASSWORD }}
+  #         ANSIBLE_HOST_KEY_CHECKING: False
+  #       run: |
+  #         source ~/ansible/ansible-venv/bin/activate
+  #         ansible-playbook cluster_longhorn_cl2.yaml -i inventory/inventory
+
+  # config_downstream_3:
+  #   needs: lint
+  #   runs-on: [self-hosted, jump-host]
+  #   steps:
+  #     - name: Configure downstream cluster 3
+  #       shell: bash
+  #       env:
+  #         RANCHER_PASSWORD: ${{ secrets.RANCHER_PASSWORD }}
+  #         ANSIBLE_HOST_KEY_CHECKING: False
+  #       run: |
+  #         source ~/ansible/ansible-venv/bin/activate
+  #         ansible-playbook cluster_longhorn_cl3.yaml -i inventory/inventory
+
+  config_downstream_4:
+    needs: lint
+    runs-on: [self-hosted, jump-host]
+    steps:
+      - name: Configure downstream cluster 4
+        shell: bash
+        env:
+          RANCHER_PASSWORD: ${{ secrets.RANCHER_PASSWORD }}
+          ANSIBLE_HOST_KEY_CHECKING: False
+        run: |
+          source ~/ansible/ansible-venv/bin/activate
+          ansible-playbook cluster_longhorn_cl4.yaml -i inventory/inventory
+
+  config_downstream_5:
+    needs: lint
+    runs-on: [self-hosted, jump-host]
+    steps:
+      - name: Configure downstream cluster 5
+        shell: bash
+        env:
+          RANCHER_PASSWORD: ${{ secrets.RANCHER_PASSWORD }}
+          ANSIBLE_HOST_KEY_CHECKING: False
+        run: |
+          source ~/ansible/ansible-venv/bin/activate
+          ansible-playbook cluster_longhorn_cl5.yaml -i inventory/inventory
+
+  # config_downstream_bck:
+  #   needs: lint
+  #   runs-on: [self-hosted, jump-host]
+  #   steps:
+  #     - name: Configure downstream cluster BCK
+  #       shell: bash
+  #       env:
+  #         RANCHER_PASSWORD: ${{ secrets.RANCHER_PASSWORD }}
+  #         ANSIBLE_HOST_KEY_CHECKING: False
+  #       run: |
+  #         source ~/ansible/ansible-venv/bin/activate
+  #         ansible-playbook cluster_longhorn_bck.yaml -i inventory/inventory

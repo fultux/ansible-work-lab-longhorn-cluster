@@ -1,6 +1,0 @@
-defaultNamespace: chaos-mesh
-
-dependsOn:
-  - selector:
-      matchLabels:
-        app: chaos-mesh
