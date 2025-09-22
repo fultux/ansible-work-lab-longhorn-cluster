@@ -22,7 +22,7 @@
       - 115
     controlplane_vm_cores: 4
     controlplane_vm_sockets: 1
-    controlplane_vm_memory: 4096
+    controlplane_vm_memory: 8192
     controlplane_vms_username: rancher
     controlplane_vms_password: rancher
     controlplane_vm_ips: [10.20.0.21]
