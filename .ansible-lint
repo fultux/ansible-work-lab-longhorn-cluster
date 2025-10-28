@@ -28,7 +28,7 @@ exclude_paths:
 # requirements, like avoiding python identifiers. To disable add `var-naming`
 # to skip_list.
 var_naming_pattern: "^[a-z_][a-z0-9_]*$"
-var-naming[no-role-prefix]
+
 
 use_default_rules: true
 # Load custom rules from this specific folder
@@ -44,7 +44,7 @@ use_default_rules: true
 # When putting ignores inside the ignore file, they are marked as ignored, but
 # still visible, making it easier to address later.
 skip_list:
-  - skip_this_tag
+  - var-naming[no-role-prefix]
 
 # Ansible-lint does not automatically load rules that have the 'opt-in' tag.
 # You must enable opt-in rules by listing each rule 'id' below.
