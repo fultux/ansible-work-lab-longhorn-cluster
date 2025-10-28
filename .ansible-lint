@@ -28,6 +28,7 @@ exclude_paths:
 # requirements, like avoiding python identifiers. To disable add `var-naming`
 # to skip_list.
 var_naming_pattern: "^[a-z_][a-z0-9_]*$"
+var-naming[no-role-prefix]
 
 use_default_rules: true
 # Load custom rules from this specific folder
